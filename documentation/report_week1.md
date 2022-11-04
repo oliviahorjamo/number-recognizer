@@ -1,4 +1,4 @@
-# Project speficiation
+# Project specification
 
 The project idea is to create a program to recognize hand written numbers with a neural network that has been created from scratch. Hence, the network should perform a classification task. The exact implemementation of the network will become more accurate later but the network will consist of at least the following:
 

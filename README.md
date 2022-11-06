@@ -4,3 +4,7 @@ Recognize hand-written numbers with a neural network made from scratch. Data stu
 ## Week reports
 
 - [Week 1](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/week1_report)
+
+## Documentation
+
+- [Project specification](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/project_specification.md)

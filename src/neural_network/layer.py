@@ -19,3 +19,18 @@ class Layer:
 
         self.weights = np.random.rand(input_size, layer_size)
         self.biases = np.random.rand(layer_size, 1)
+
+    def forward_propagation(self, input_data):
+        """y = b + x*w where y, b and x are vectors and w is a weight matrix
+        
+        Parameters:
+        input_data: numpy array
+            the output of the previous layer
+        """
+        self.output = np.dot(input_data, self.weights) + self.bias
+
+    def backward_propagation(self):
+        raise NotImplemented
+
+    def activation(self):
+        raise NotImplemented

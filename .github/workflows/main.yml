@@ -23,6 +23,10 @@ jobs:
       - name: Run tests
         run: poetry run coverage run --branch -m pytest
       - name: Coverage report
+        run: poetry run coverage run --branch -m pytest
+      - name: Coverage report to html
+        run: poetry run coverage html
+      - name: Coverage report xml
         run: poetry run coverage xml
       - name: Coverage report to Codecov
         run: bash <(curl -s https://codecov.io/bash)

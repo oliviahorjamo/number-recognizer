@@ -1,6 +1,6 @@
 import numpy as np
 # TODO: selvitä miksi tämä rikkoo testit
-import activation_functions
+from neural_network import activation_functions
 
 class Layer:
     """A class that represents a layer
@@ -41,9 +41,9 @@ class Layer:
     def activation(self, input):
         return activation_functions.softmax(input)
 
-layer = Layer(3, 3)
-print(layer.weights)
-input_array = np.transpose(np.array([1,1,1]))
-print(input_array)
-print(layer.forward_propagation(input))
+#layer = Layer(3, 3)
+#print(layer.weights)
+#input_array = np.transpose(np.array([1,1,1]))
+#print(input_array)
+#print(layer.forward_propagation(input))
 

@@ -13,7 +13,7 @@ The project idea is to create a program to recognize hand written numbers with a
 ## The structure of the network as matrices
 
 - For each layer, there should be a matrix to represent the weights of the links between this layer and the next layer. Each column represents the weights between all neurons of the previous layer and one neuron of this layer. Hence, the size of the entire matrix for layer $l$ will be $N_l * N_l+1$ (the number of neurons in this layer * number of neurons in the next layer).
-- For each layer, there should also be a vector $**b^l**$ describing the bias of each neuron of the layer $l$. In other words, $b_i^l$ describes the bias of the $i$th neuron of layer $l$.
+- For each layer, there should also be a vector **$b^l$** describing the bias of each neuron of the layer $l$. In other words, value $b_i^l$ in the vector describes the bias of the $i$th neuron of layer $l$.
 - All in all, if there are $L$ layers, there should be 2 * $L$ matrices, since there are two matrices per layer. 
 - Each matrix is represented as a numpy array in the program
 
@@ -39,8 +39,8 @@ The program should contain the following classes to describe the entire network:
 
 Forward propagation means the process of data flowing from the first layer to the last layer. In each layer, the value of each neuron is decided by the following procedure:
 
-1. Multiply the value of each neuron $j$ in the previous layer $l-1$ by the weight of the link between this neuron $i$ ($w_ij^l$). Calculate the sum of these.
-2. Apply an activation function to the sum. The activation function is used to 'squeeze' the value to the range [0,1].
+1. Multiply the value of each neuron $j$ in the previous layer $l-1$ by the weight of the link between this neuron $i$ ( $w_ij^l$ ) and neuron $j$ in the previous layer. Calculate the sum of these values for each neuron.
+2. Apply an activation function to each sum and you will get $ x_i^l $, the value of neuron $i$ in layer $l$. The activation function is used to 'squeeze' the value to the range [0,1]. This 
 3. Do the same procedure again in the next layer.
 
 **The time complexity of forward propagation:**

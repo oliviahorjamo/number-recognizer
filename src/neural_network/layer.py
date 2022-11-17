@@ -38,6 +38,9 @@ class Layer:
     def activation(self, input_array):
         return activation_functions.relu(input_array)
 
+    def activation_prime(self, input_array):
+        return activation_functions.relu_prime(input_array)
+
     def forward_propagation(self, input_array):
         """Propagate data forwards: calculate the output of this layer by calculating the
         dot product of the input data and the weights between this layer and the previous

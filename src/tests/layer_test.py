@@ -66,4 +66,20 @@ class TestLayer(unittest.TestCase):
         output = self.layer.forward_propagation(input_array)
         self.assertEqual((output == np.array([0.25,0.25,0.25])).all(), True)
 
+    def test_activation_prime_all_positives(self):
+        input_array = np.array([1,0.5,1])
+        output = self.layer.activation_prime(input_array)
+        self.assertEqual((output == np.array([1,1,1])).all(), True)
+
+    def test_activation_prime_all_negatives(self):
+        input_array = np.array([-0.5,-0.5,-0.5])
+        output = self.layer.activation_prime(input_array)
+        self.assertEqual((output == np.array([0,0,0])).all(), True)
+
+    def test_activation_prime_positives_and_negatives(self):
+        input_array = np.array([-0.5, 0.5, -0.5])
+        output = self.layer.activation_prime(input_array)
+        self.assertEqual((output == np.array([0, 1, 0])).all(), True)
+
+
 

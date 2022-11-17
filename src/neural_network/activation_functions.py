@@ -1,12 +1,15 @@
 
 import numpy as np
-
-def softmax_item(item):
-    return max(0, item)
-
-def softmax_old(input_data):
-    func = np.vectorize(softmax_item)
-    return func(input_data)
     
 def relu(input_data):
     return (np.maximum(0, input_data))
+
+def relu_item_function(item):
+    if item > 0:
+        return 1
+    else:
+        return 0
+
+def relu_prime(input_data):
+    prime = np.array(list(map(relu_item_function, input_data)))
+    return prime

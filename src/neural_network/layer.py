@@ -1,5 +1,4 @@
 import numpy as np
-# TODO: selvitä miksi tämä rikkoo testit
 from neural_network import activation_functions
 
 class Layer:
@@ -15,13 +14,22 @@ class Layer:
         """creates a new Layer -class instance with random weigths and biases
         Parameters:
         input_size: the size of the input given to this layer
-        output_size: the number of neurons in this layer"""
+        output_size: the number of neurons in this layer
+        
+        The columns represent the weights of the edges between one neuron in this
+        layer and all neurons in the previous layer. Hence, each column represents one
+        neuron in this layer. Since there is only one bias term per neuron
+        the size of self.biases is (1, layer_size). 
+        """
 
         self.weights = np.random.rand(input_size, layer_size)
-        self.biases = np.random.rand(layer_size, 1)
+        self.biases = np.random.rand(1, layer_size)
 
     def dot_product(self, input_data):
-        return np.dot(input_data, self.weights) + self.biases
+        return np.dot(input_data, self.weights)
+
+    def add_biases(self, input_data):
+        return input_data + self.biases
 
     def forward_propagation(self, input_data):
         """y = b + x*w where y, b and x are vectors and w is a weight matrix
@@ -31,8 +39,9 @@ class Layer:
         input_data: numpy array
             the output of the previous layer
         """
-        x = self.dot_product(input_data)
-        x_final = self.activation(x)
+        x_dot_weigths = self.dot_product(input_data)
+        x_plus_biases = self.add_biases(x_dot_weigths)
+        x_final = self.activation(x_plus_biases)
         return x_final
 
     def backward_propagation(self):
@@ -41,9 +50,4 @@ class Layer:
     def activation(self, input):
         return activation_functions.softmax(input)
 
-#layer = Layer(3, 3)
-#print(layer.weights)
-#input_array = np.transpose(np.array([1,1,1]))
-#print(input_array)
-#print(layer.forward_propagation(input))
 

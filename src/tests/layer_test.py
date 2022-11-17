@@ -2,19 +2,23 @@ import unittest
 from neural_network.layer import Layer
 import numpy as np
 
-class StubLayer:
+class StubLayer(Layer):
     def __init__(self, input_size, layer_size):
-        self.layer = Layer(input_size, layer_size)
-        self.layer.weights = np.ones((input_size, layer_size))
-        self.layer.biases = np.ones((layer_size, 1))
+        #self.layer = Layer(input_size, layer_size)
+        super().__init__(input_size, layer_size)
+        print('weigths before change')
+        print(self.weights)
+        self.weights = np.ones((input_size, layer_size))
+        print('weigths after change')
+        print(self.weights)
+        self.biases = np.ones((1, layer_size))
 
 class TestLayer(unittest.TestCase):
 
     def setUp(self):
         self.input_size = 3
         self.layer_size = 3
-        #self.layer = Layer(self.input_size, self.layer_size)
-        self.layer = StubLayer(self.input_size,self.layer_size).layer
+        self.layer = StubLayer(self.input_size,self.layer_size)
 
     def test_init_layer_weights_size(self):
         self.assertEqual(self.layer.weights.size, self.input_size*self.layer_size)
@@ -29,12 +33,43 @@ class TestLayer(unittest.TestCase):
     def test_dot(self):
         input_array = np.array([1,1,1])
         output = self.layer.dot_product(input_array)
-        self.assertEqual((output == np.array([4,4,4])).all(), True)
+        self.assertEqual((output == np.array([3,3,3])).all(), True)
 
-    def test_activation(self):
-        # voidaan toteuttaa vasta kun importit saatu toteutettua oikein
-        return 1
+    def test_add_biases(self):
+        input_array = np.array([1,1,1])
+        output = self.layer.add_biases(input_array)
+        self.assertEqual((output == np.array([2,2,2])).all(), True)
 
-    def test_forward_propagation(self):
-        # voidaan toteuttaa vasta kun activation saatu toteutettua Layer -luokassa
-        return 1
+    def test_activation_all_positives(self):
+        input_array = np.array([1,1,1])
+        output = self.layer.activation(input_array)
+        self.assertEqual((output == np.array([1,1,1])).all(), True)
+
+
+    def test_activation_all_negatives(self):
+        input_array = np.array([-2,-2,-2])
+        output = self.layer.activation(input_array)
+        self.assertEqual((output == np.array([0,0,0])).all(), True)
+
+    def test_activation_positives_and_negatives(self):
+        input_array = np.array([-2,1,-2])
+        output = self.layer.activation(input_array)
+        self.assertEqual((output == np.array([0,1,0])).all(), True)
+
+
+    def test_forward_propagation_all_positives(self):
+        input_array = np.array([0.5,0.5,0.5])
+        output = self.layer.forward_propagation(input_array)
+        self.assertEqual((output == np.array([5/2,5/2,5/2])).all(), True)
+
+    def test_forward_propagation_all_negatives(self):
+        input_array = np.array([-0.5,-0.5,-0.5])
+        output = self.layer.forward_propagation(input_array)
+        self.assertEqual((output == np.array([0,0,0])).all(), True)
+
+    def test_forward_propagation_pos_and_neg(self):
+        input_array = np.array([-0.5,0.5,-0.5])
+        output = self.layer.forward_propagation(input_array)
+        self.assertEqual((output == np.array([0.5,0.5,0.5])).all(), True)
+
+

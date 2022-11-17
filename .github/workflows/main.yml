@@ -28,5 +28,7 @@ jobs:
         run: poetry run coverage xml
       - name: Coverage report to Codecov
         run: bash <(curl -s https://codecov.io/bash)
+      - name: Fix pylint issues with autopep8
+        run: poetry run autopep8 --in-place --recursive src/*.py
       - name: Check pylint
         run: poetry run pylint src

@@ -1,6 +1,7 @@
 import numpy as np
 from neural_network import activation_functions
 
+
 class Layer:
     """A class that represents a layer
     Attributes:
@@ -15,11 +16,11 @@ class Layer:
         Parameters:
         input_size: the size of the input given to this layer
         output_size: the number of neurons in this layer
-        
+
         The columns represent the weights of the edges between one neuron in this
         layer and all neurons in the previous layer. Hence, each column represents one
         neuron in this layer. Since there is only one bias term per neuron
-        the size of self.biases is (1, layer_size). 
+        the size of self.biases is (1, layer_size).
         """
 
         self.weights = np.random.rand(input_size, layer_size)
@@ -34,7 +35,7 @@ class Layer:
     def forward_propagation(self, input_data):
         """y = b + x*w where y, b and x are vectors and w is a weight matrix
             for the edges between the previous layer and this layer
-        
+
         Parameters:
         input_data: numpy array
             the output of the previous layer
@@ -47,7 +48,5 @@ class Layer:
     def backward_propagation(self):
         raise NotImplementedError
 
-    def activation(self, input):
-        return activation_functions.softmax(input)
-
-
+    def activation(self, input_array):
+        return activation_functions.softmax(input_array)

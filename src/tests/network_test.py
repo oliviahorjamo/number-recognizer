@@ -20,10 +20,18 @@ class TestNetwork(unittest.TestCase):
         self.network.add_layer(layer)
         self.assertEqual(len(self.network.layers), 1)
 
-    def test_forward_propagation(self):
+    def test_forward_propagation_two_layers(self):
         layers = [StubLayer(3, 3), StubLayer(3,3)]
+        for layer in layers:
+            self.network.add_layer(layer)
+        test_data = np.array([0.5,0.5,0.5])
+        output = self.network.forward_propagation(test_data)
+        self.assertEqual((output == np.array([2.375, 2.375, 2.375])).all(), True)
+
+    def test_forward_propagation_three_layers(self):
+        layers = [StubLayer(3, 3), StubLayer(3,3), StubLayer(3,3)]
         for layer in layers:
             self.network.add_layer(layer)
         test_data = np.array([1,1,1])
         output = self.network.forward_propagation(test_data)
-        self.assertEqual((output == np.array([13, 13, 13])).all(), True)
+        self.assertEqual((output == np.array([5.75, 5.75, 5.75])).all(), True)

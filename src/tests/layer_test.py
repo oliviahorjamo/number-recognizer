@@ -6,12 +6,8 @@ class StubLayer(Layer):
     def __init__(self, input_size, layer_size):
         #self.layer = Layer(input_size, layer_size)
         super().__init__(input_size, layer_size)
-        print('weigths before change')
-        print(self.weights)
-        self.weights = np.ones((input_size, layer_size))
-        print('weigths after change')
-        print(self.weights)
-        self.biases = np.ones((1, layer_size))
+        self.weights = np.ones((input_size, layer_size)) - 0.5
+        self.biases = np.ones((1, layer_size)) -0.5
 
 class TestLayer(unittest.TestCase):
 
@@ -33,34 +29,32 @@ class TestLayer(unittest.TestCase):
     def test_dot(self):
         input_array = np.array([1,1,1])
         output = self.layer.dot_product(input_array)
-        self.assertEqual((output == np.array([3,3,3])).all(), True)
+        self.assertEqual((output == np.array([3/2,3/2,3/2])).all(), True)
 
     def test_add_biases(self):
         input_array = np.array([1,1,1])
         output = self.layer.add_biases(input_array)
-        self.assertEqual((output == np.array([2,2,2])).all(), True)
+        self.assertEqual((output == np.array([1.5,1.5,1.5])).all(), True)
 
     def test_activation_all_positives(self):
-        input_array = np.array([1,1,1])
+        input_array = np.array([1,0.5,1])
         output = self.layer.activation(input_array)
-        self.assertEqual((output == np.array([1,1,1])).all(), True)
-
+        self.assertEqual((output == np.array([1,0.5,1])).all(), True)
 
     def test_activation_all_negatives(self):
-        input_array = np.array([-2,-2,-2])
+        input_array = np.array([-0.5,-0.5,-0.5])
         output = self.layer.activation(input_array)
         self.assertEqual((output == np.array([0,0,0])).all(), True)
 
     def test_activation_positives_and_negatives(self):
-        input_array = np.array([-2,1,-2])
+        input_array = np.array([-0.5, 0.5, -0.5])
         output = self.layer.activation(input_array)
-        self.assertEqual((output == np.array([0,1,0])).all(), True)
-
+        self.assertEqual((output == np.array([0, 0.5, 0])).all(), True)
 
     def test_forward_propagation_all_positives(self):
         input_array = np.array([0.5,0.5,0.5])
         output = self.layer.forward_propagation(input_array)
-        self.assertEqual((output == np.array([5/2,5/2,5/2])).all(), True)
+        self.assertEqual((output == np.array([5/4,5/4,5/4])).all(), True)
 
     def test_forward_propagation_all_negatives(self):
         input_array = np.array([-0.5,-0.5,-0.5])
@@ -70,6 +64,6 @@ class TestLayer(unittest.TestCase):
     def test_forward_propagation_pos_and_neg(self):
         input_array = np.array([-0.5,0.5,-0.5])
         output = self.layer.forward_propagation(input_array)
-        self.assertEqual((output == np.array([0.5,0.5,0.5])).all(), True)
+        self.assertEqual((output == np.array([0.25,0.25,0.25])).all(), True)
 
 

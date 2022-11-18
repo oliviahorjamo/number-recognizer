@@ -14,7 +14,6 @@ net.add_layer(Layer(3, 3))
 # hidden layer of three neurons
 # output layer of three neurons
 
-# this is of wrong shape, must fix!
 y_pred = net.forward_propagation(np.array([[0.5, 0.5, 0.5]]))
 
 # this test case would represent classifying into three different classes

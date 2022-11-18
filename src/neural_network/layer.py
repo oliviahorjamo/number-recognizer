@@ -25,16 +25,14 @@ class Layer:
 
         self.weights = np.random.rand(input_size, layer_size) - 0.5
         self.biases = np.random.rand(1, layer_size) - 0.5
+        self.input = None
 
     def dot_product(self, input_data):
         return np.dot(input_data, self.weights)
 
-    #def dot_product_transpose(self, input_data):
-     #   return np.dot(input_data, self.weights.T)
-
     def add_biases(self, input_data):
         return input_data + self.biases
-    
+   
     def activation(self, input_array):
         return activation_functions.relu(input_array)
 
@@ -93,7 +91,7 @@ class Layer:
     def backward_propagation_adjust_weights(self, error_gradient_weights):
         """Adjust the weights of the edges between the previous layer and this layer
         by the gradient of the error with respect to weights.
-        
+
         Parameters:
         error_gradient_weights: the gradient of the error with respect to weights. The
         negative of the gradient tells the direction of deepest decrease, i.e. which weights
@@ -103,7 +101,7 @@ class Layer:
     def backward_propagation_adjust_biases(self, error_gradient_biases):
         """Adjust the biases of the neurons in this layer by the gradient of the error
         with respect to biases.
-        
+
         Parameters:
         error_gradient_biases: the gradient of the error with respect to biases. The
         negative of the gradient tells the direction of deepest decrease, i.e. which biases

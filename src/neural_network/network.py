@@ -24,3 +24,4 @@ class Network:
         for layer in reversed(self.layers):
             output_error = layer.backward_propagation(output_error)
         return output_error
+        

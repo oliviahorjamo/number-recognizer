@@ -1,5 +1,3 @@
-import numpy as np
-
 def mean_squared_error(y_true, y_pred):
     """Calculate the error of the output layer. Error is a measure (= number)
     of how wrong the output of the layer.

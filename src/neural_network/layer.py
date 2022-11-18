@@ -23,14 +23,14 @@ class Layer:
         the size of self.biases is (1, layer_size).
         """
 
-        self.weights = np.random.rand(input_size, layer_size)
-        self.biases = np.random.rand(1, layer_size)
+        self.weights = np.random.rand(input_size, layer_size) - 0.5
+        self.biases = np.random.rand(1, layer_size) - 0.5
 
     def dot_product(self, input_data):
         return np.dot(input_data, self.weights)
 
-    def dot_product_transpose(self, input_data):
-        return np.dot(input_data, self.weights.T)
+    #def dot_product_transpose(self, input_data):
+     #   return np.dot(input_data, self.weights.T)
 
     def add_biases(self, input_data):
         return input_data + self.biases
@@ -57,17 +57,41 @@ class Layer:
         x_final = self.activation(x_plus_biases)
         return x_final
 
-    def backward_propagation(self, output_error):
+    def backward_propagation(self, output_error_gradient):
         """Based on the error with respect to the output of this layer, calculate the error
         with respect to the weights and biases of this layer and then output the error with
         respect to the input of this layer. This will yield the output_error for the previous
         layer.
         
         Parameters:
-        output_error: the derivate of the error with respect to this layer's output
+        output_error: the gradient of the error with respect to this layer's output
 
         Outputs:
-        the derviate of the error with respect to the input of this layer
+        the derivative of the error with respect to the input of this layer
         
         """
-        input_error = self.dot_product_transpose(output_error)
+
+        # should be of size (input_size, layer_size since there is one gradient for every weight)
+        # because y = xw + b, the partial derivative of E with respect to w can be calculated with the
+        # chain rule dE/dw = dE/dy * dy/dw, dy/dw = x
+        # = self.input * output_error_gradient
+        error_gradient_weights = np.dot(self.input.T, output_error_gradient)
+
+        # shold be of size (1, layer_size) since there is one gradient for each bias
+        # y = xw + b --> dE/db = dE/dy * dy/db = dE/dy
+        # = output_error_gradient
+        error_gradient_biases = output_error_gradient
+
+        # should be of size (1, input_error)
+        # y = xw + b --> dE / dx = dE / dy * dy/dx = dE/dy* w
+        # output_error_gradient * self.weights
+        error_gradient_inputs = np.dot(output_error_gradient, self.weights)
+
+        #TODO:
+        # change weights and biases with respect to the gradients
+        self.weights = self.weights - error_gradient_weights
+        #print(self.weights - error_gradient_weights)
+
+        self.biases = self.biases - error_gradient_biases
+
+        return error_gradient_inputs

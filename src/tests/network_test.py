@@ -14,8 +14,6 @@ class TestNetwork(unittest.TestCase):
         self.network = Network()
 
     def test_add_layer(self):
-        # create a layer with input size 3 and output size 3
-        # all weights are 1 and so are all biases
         layer = StubLayer(3, 3)
         self.network.add_layer(layer)
         self.assertEqual(len(self.network.layers), 1)

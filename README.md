@@ -12,3 +12,7 @@ Recognize hand-written numbers with a neural network made from scratch. Data stu
 ## Documentation
 
 - [Project specification](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/project_specification.md)
+
+## Test coverage
+
+Test coverage can be seen at: [codecove](https://app.codecov.io/gh/oliviahorjamo/number-recognizer)

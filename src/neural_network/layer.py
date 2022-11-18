@@ -69,24 +69,33 @@ class Layer:
         
         """
 
-        # should be of size (input_size, layer_size since there is one gradient for every weight)
-        # the partial derivative of E with respect to w can be calculated with the
-        # chain rule dE/dw = dE/dy * dy/dw
-        # because y = xw + b, dy/dw = x
-        error_gradient_weights = np.dot(self.input.T, error_gradient_output)
+        error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_output)
         self.backward_propagation_adjust_weights(error_gradient_weights)
 
-        # shold be of size (1, layer_size) since there is one gradient for each bias
-        # y = xw + b --> dE/db = dE/dy * dy/db = dE/dy (=output_error)
-        error_gradient_biases = error_gradient_output
-        self.backward_propagation_adjust_biases(error_gradient_biases)
+        self.backward_propagation_adjust_biases(error_gradient_output)
 
-        # should be of size (1, input_error)
-        # y = xw + b --> dE / dx = dE / dy * dy/dx = dE/dy* w
-        # serves as the error with respect to the output for the previous layer
-        error_gradient_inputs = np.dot(error_gradient_output, self.weights)
+        error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_output)
 
         return error_gradient_inputs
+
+    def calculate_error_gradient_weights(self, error_gradient_output):
+        """Calculate the gradient of the error with respect to the weight parameters of this layer.
+        
+        Return:
+        error_gradient_weights: dE/dw = dE/dy * dy/dw. Because y = xw + b, dy/dw = x.
+        Hence, dE/dw = dE/dy * x
+        The gradient should be of size (input_size, layer_size) since there is one gradient for every weight.
+        """
+        error_gradient_weights = np.dot(self.input.T, error_gradient_output)
+        return error_gradient_weights
+
+    def calculate_error_gradient_input(self, error_gradient_output):
+        """Calculate the gradient of the error with respect to the inputs of this layer, i.e. the
+        outputs of the previous layer.
+        
+        Return:
+        error_gradient_inputs: dE / dx = dE/dy * dy/dx. Because y = xw + b, dy / dx = w."""
+        return np.dot(error_gradient_output, self.weights)
 
     def backward_propagation_adjust_weights(self, error_gradient_weights):
         """Adjust the weights of the edges between the previous layer and this layer
@@ -98,12 +107,15 @@ class Layer:
         to adjust and by how much to decrease the error the fastest."""
         self.weights = self.weights - error_gradient_weights
 
-    def backward_propagation_adjust_biases(self, error_gradient_biases):
+    def backward_propagation_adjust_biases(self, error_gradient_output):
         """Adjust the biases of the neurons in this layer by the gradient of the error
-        with respect to biases.
+        with respect to the output.
 
         Parameters:
-        error_gradient_biases: the gradient of the error with respect to biases. The
-        negative of the gradient tells the direction of deepest decrease, i.e. which biases
+        error_gradient_output: the gradient of the error with respect to the output of this layer.
+        The gradient of th error with respect to the biases is the same as the error with respect
+        to the biases because dE/db = dE/dy * dy/db and y = xw + b which means that dy/db = 0.
+        
+        The negative of the gradient tells the direction of deepest decrease, i.e. which biases
         to adjust and by how much to decrease the error the fastest."""
-        self.biases = self.biases - error_gradient_biases
+        self.biases = self.biases - error_gradient_output

@@ -4,7 +4,6 @@ import numpy as np
 
 class StubLayer(Layer):
     def __init__(self, input_size, layer_size):
-        #self.layer = Layer(input_size, layer_size)
         super().__init__(input_size, layer_size)
         self.weights = np.ones((input_size, layer_size)) - 0.5
         self.biases = np.ones((1, layer_size)) -0.5
@@ -15,6 +14,7 @@ class TestLayer(unittest.TestCase):
         self.input_size = 3
         self.layer_size = 3
         self.layer = StubLayer(self.input_size,self.layer_size)
+        self.layer.input = None
 
     def test_init_layer_weights_size(self):
         self.assertEqual(self.layer.weights.size, self.input_size*self.layer_size)
@@ -80,6 +80,37 @@ class TestLayer(unittest.TestCase):
         input_array = np.array([-0.5, 0.5, -0.5])
         output = self.layer.activation_prime(input_array)
         self.assertEqual((output == np.array([0, 1, 0])).all(), True)
+
+    def test_backward_prop_calculate_error_gradient_weights_wrong_output(self):
+        self.layer.input = np.array([[1, 1, 1]])
+        error_gradient_output = np.array([[0.5, 0.5, 0.5]])
+        error_gradient_weights = self.layer.calculate_error_gradient_weights(error_gradient_output)
+        correct_output = np.array([[0.5, 0.5, 0.5],
+                                    [0.5, 0.5, 0.5],
+                                    [0.5, 0.5, 0.5]])
+        self.assertEqual((error_gradient_weights == correct_output).all(), True)
+
+    def test_backward_prop_calculate_error_gradient_input(self):
+        error_gradient_output = np.array([[0.5, 0.5, 0.5]])
+        error_gradient_input = self.layer.calculate_error_gradient_input(error_gradient_output)
+        correct_output = np.array([[3/4, 3/4, 3/4]])
+        self.assertEqual((error_gradient_input == correct_output).all(), True)
+
+    def test_backward_prop_calculate_error_gradient_weights_right_output(self):
+        self.layer.input = np.array([[1, 1, 1]])
+        error_gradient_output = np.array([[0, 0, 0]])
+        error_gradient_weights = self.layer.calculate_error_gradient_weights(error_gradient_output)
+        correct_output = np.zeros((3,3))
+        self.assertEqual((error_gradient_weights == correct_output).all(), True)
+
+    def test_backward_prop_calculate_error_gradient_input_right_output(self):
+        self.layer.input = np.array([[1, 1, 1]])
+        error_gradient_output = np.array([[0, 0, 0]])
+        error_gradient_weights = self.layer.calculate_error_gradient_input(error_gradient_output)
+        correct_output = np.zeros((3,3))
+        self.assertEqual((error_gradient_weights == correct_output).all(), True)
+
+
 
 
 

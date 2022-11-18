@@ -110,6 +110,31 @@ class TestLayer(unittest.TestCase):
         correct_output = np.zeros((3,3))
         self.assertEqual((error_gradient_weights == correct_output).all(), True)
 
+    def test_backward_prop_adjust_weights(self):
+        error_gradient_weights = np.array([[0.5, 0.5, 0.5],
+                                    [0.5, 0.5, 0.5],
+                                    [0.5, 0.5, 0.5]])
+        self.layer.backward_propagation_adjust_weights(error_gradient_weights)
+        new_weights = np.zeros((3,3))
+        self.assertEqual((self.layer.weights == new_weights).all(), True)
+
+    def test_backward_prop_adjust_biases(self):
+        error_gradient_output = np.array([[0.5, 0.5, 0.5]])
+        self.layer.backward_propagation_adjust_biases(error_gradient_output)
+        new_biases = np.array([[0, 0, 0]])
+        self.assertEqual((self.layer.biases == new_biases).all(), True)
+
+    def test_backward_propagation(self):
+        self.layer.input = np.array([[1, 1, 1]])
+        error_gradient_output = np.array([[0.5, 0.5, 0.5]])
+        backward_prop_output = self.layer.backward_propagation(error_gradient_output)
+        correct_weights = np.zeros((3,3))
+        self.assertEqual((self.layer.weights == correct_weights).all(), True)
+        correct_biases = np.zeros((1,3))
+        self.assertEqual((self.layer.biases == correct_biases).all(), True)
+        correct_output = np.array([[3/4, 3/4, 3/4]])
+        self.assertEqual((correct_output == backward_prop_output).all(), True)
+
 
 
 

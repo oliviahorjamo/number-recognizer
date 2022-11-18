@@ -68,13 +68,14 @@ class Layer:
         error_gradient_inputs: the derivative of the error with respect to the input of this layer
         
         """
+        
+        error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_output)
 
         error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_output)
         self.backward_propagation_adjust_weights(error_gradient_weights)
 
         self.backward_propagation_adjust_biases(error_gradient_output)
 
-        error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_output)
 
         return error_gradient_inputs
 

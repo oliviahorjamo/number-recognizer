@@ -4,33 +4,31 @@ from neural_network.layer import Layer
 import neural_network.loss_functions as loss_functions
 import numpy as np
 
-from tests.layer_test import StubLayer
+#from tests.layer_test import StubLayer
+
+x_train = np.array([[[0,0]], [[0,1]], [[1,0]], [[1,1]]])
+y_train = np.array([[[0]], [[1]], [[1]], [[0]]])
+
+train_data = [
+            (np.array([[0,0]]), np.array([[0]])),
+            (np.array([[0,1]]), np.array([[1]])),
+            (np.array([[1,0]]), np.array([[1]])),
+            (np.array([[1,1]]), np.array([[0]]))
+            ]
+
+test_data = (np.array([[1,0]]))
 
 net = Network()
-net.add_layer(Layer(3, 3))
-net.add_layer(Layer(3, 3))
-net.add_layer(Layer(3, 3))
 
-# currently the network has the following structure
-# input layer of three neurons
-# hidden layer of three neurons
-# output layer of three neurons
+input_size = np.size(train_data[0][0])
 
-y_pred = net.forward_propagation(np.array([[0.25, 0.1, 0.5]]))
+net.add_layer(Layer(input_size, 2))
+net.add_layer(Layer(2, 2))
+net.add_layer(Layer(2, 1))
+
+
+net.train(train_data, 100, learning_rate = 0.1)
+
+y_pred = net.predict(test_data)
 
 print('y_pred', y_pred)
-
-# this test case would represent classifying into three different classes
-y_true = np.array([[0, 0, 1]])
-
-# the gradient of the error with respect to the output
-# describes which way the output should move to yield a better approximation
-output_error_gradient = loss_functions.mse_gradient(y_true, y_pred)
-
-print('mse_gradient')
-
-print(output_error_gradient)
-
-data_after_back_propagation = net.backward_propagation(output_error_gradient)
-
-print(data_after_back_propagation)

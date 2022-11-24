@@ -61,7 +61,7 @@ class Layer:
 
         return x_final
 
-    def backward_propagation(self, error_gradient_output):
+    def backward_propagation(self, error_gradient_output, learning_rate):
         """Based on the error with respect to the output of this layer, calculate the error
         with respect to the weights and biases of this layer and then output the error with
         respect to the input of this layer. This will yield the output_error for the previous
@@ -84,9 +84,9 @@ class Layer:
         error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_activation)
 
         error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_activation)
-        self.backward_propagation_adjust_weights(error_gradient_weights)
+        self.backward_propagation_adjust_weights(error_gradient_weights, learning_rate)
 
-        self.backward_propagation_adjust_biases(error_gradient_activation)
+        self.backward_propagation_adjust_biases(error_gradient_activation, learning_rate)
 
         print('error gradient inputs')
         print(error_gradient_inputs)
@@ -116,9 +116,9 @@ class Layer:
         
         Return:
         error_gradient_inputs: dE / dx = dE/dy * dy/dx. Because y = xw + b, dy / dx = w."""
-        return np.dot(error_gradient_output, self.weights)
+        return np.dot(error_gradient_output, self.weights.T)
 
-    def backward_propagation_adjust_weights(self, error_gradient_weights):
+    def backward_propagation_adjust_weights(self, error_gradient_weights, learning_rate):
         """Adjust the weights of the edges between the previous layer and this layer
         by the gradient of the error with respect to weights.
 
@@ -126,9 +126,9 @@ class Layer:
         error_gradient_weights: the gradient of the error with respect to weights. The
         negative of the gradient tells the direction of deepest decrease, i.e. which weights
         to adjust and by how much to decrease the error the fastest."""
-        self.weights = self.weights - error_gradient_weights
+        self.weights = self.weights - learning_rate * error_gradient_weights
 
-    def backward_propagation_adjust_biases(self, error_gradient_output):
+    def backward_propagation_adjust_biases(self, error_gradient_output, learning_rate):
         """Adjust the biases of the neurons in this layer by the gradient of the error
         with respect to the output.
 
@@ -139,4 +139,4 @@ class Layer:
         
         The negative of the gradient tells the direction of deepest decrease, i.e. which biases
         to adjust and by how much to decrease the error the fastest."""
-        self.biases = self.biases - error_gradient_output
+        self.biases = self.biases - learning_rate * error_gradient_output

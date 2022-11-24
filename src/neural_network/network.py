@@ -23,5 +23,7 @@ class Network:
         order since the data is flowing from the last layer to the first layer."""
         for layer in reversed(self.layers):
             output_error = layer.backward_propagation(output_error)
+            print('output error in network back prop')
+            print(output_error)
         return output_error
         

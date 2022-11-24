@@ -1,6 +1,7 @@
 import unittest
 from neural_network.layer import Layer
 import numpy as np
+from neural_network.loss_functions import mse_gradient
 
 class StubLayer(Layer):
     def __init__(self, input_size, layer_size):
@@ -125,14 +126,19 @@ class TestLayer(unittest.TestCase):
         self.assertEqual((self.layer.biases == new_biases).all(), True)
 
     def test_backward_propagation(self):
-        self.layer.input = np.array([[1, 1, 1]])
-        error_gradient_output = np.array([[0.5, 0.5, 0.5]])
+        input_array = np.array([[1, 1, 1]])
+        #self.layer.input = np.array([[1, 1, 1]])
+        y_pred = self.layer.forward_propagation(input_array)
+        y_true = np.array([[0, 0, 1]])
+        error_gradient_output = mse_gradient(y_true, y_pred)
         backward_prop_output = self.layer.backward_propagation(error_gradient_output)
-        correct_weights = np.zeros((3,3))
+        correct_weights = np.array([[4.5, 4.5, 2.5],
+                                    [4.5, 4.5, 2.5],
+                                    [4.5, 4.5, 2.5]])
         self.assertEqual((self.layer.weights == correct_weights).all(), True)
-        correct_biases = np.zeros((1,3))
+        correct_biases = np.array([[4.5, 4.5, 2.5]])
         self.assertEqual((self.layer.biases == correct_biases).all(), True)
-        correct_output = np.array([[3/4, 3/4, 3/4]])
+        correct_output = np.array([[-5, -5, -5]])
         self.assertEqual((correct_output == backward_prop_output).all(), True)
 
 

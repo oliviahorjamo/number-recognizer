@@ -26,6 +26,7 @@ class Layer:
         self.weights = np.random.rand(input_size, layer_size) - 0.5
         self.biases = np.random.rand(1, layer_size) - 0.5
         self.input = None
+        self.output = None
 
     def dot_product(self, input_data):
         return np.dot(input_data, self.weights)
@@ -52,7 +53,12 @@ class Layer:
         self.input = input_array
         x_dot_weigths = self.dot_product(input_array)
         x_plus_biases = self.add_biases(x_dot_weigths)
+        self.output = x_plus_biases
         x_final = self.activation(x_plus_biases)
+
+        print('output')
+        print(x_final)
+
         return x_final
 
     def backward_propagation(self, error_gradient_output):
@@ -69,13 +75,27 @@ class Layer:
         
         """
         
-        error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_output)
+        # returns the output of this layer to what it was before the activation
+        error_gradient_activation = self.activation_prime(self.output) * error_gradient_output
+        print('error gradient activation')
 
-        error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_output)
+        print(error_gradient_activation)
+
+        error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_activation)
+
+        error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_activation)
         self.backward_propagation_adjust_weights(error_gradient_weights)
 
-        self.backward_propagation_adjust_biases(error_gradient_output)
+        self.backward_propagation_adjust_biases(error_gradient_activation)
 
+        print('error gradient inputs')
+        print(error_gradient_inputs)
+
+        print('weigths')
+        print(self.weights)
+
+        print('biases')
+        print(self.biases)
 
         return error_gradient_inputs
 

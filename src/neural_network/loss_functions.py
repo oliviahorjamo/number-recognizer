@@ -1,3 +1,5 @@
+import numpy as np
+
 def mean_squared_error(y_true, y_pred):
     """Calculate the error of the output layer. Error is a measure (= number)
     of how wrong the output of the layer.
@@ -16,5 +18,7 @@ def mse_gradient(y_true, y_pred):
     wrong the output of each neuron is.
     """
     error_vector = y_true - y_pred
+    print('error vector')
+    print(error_vector)
     gradient = 2 / len(y_true) * error_vector
     return gradient

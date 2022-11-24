@@ -13,7 +13,7 @@ class TestError(unittest.TestCase):
         self.assertEqual(loss_functions.mean_squared_error(y_true, y_pred), 0.0)
 
     def test_mse_wrong_output(self):
-        y_true = np.array([1,1,1])
+        y_true = np.array([1,0,0])
         y_pred = np.array([0.5,0.5,0.5])
         self.assertEqual(loss_functions.mean_squared_error(y_true, y_pred), 0.25)
 

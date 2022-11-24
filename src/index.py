@@ -4,6 +4,8 @@ from neural_network.layer import Layer
 import neural_network.loss_functions as loss_functions
 import numpy as np
 
+from tests.layer_test import StubLayer
+
 net = Network()
 net.add_layer(Layer(3, 3))
 net.add_layer(Layer(3, 3))
@@ -14,7 +16,9 @@ net.add_layer(Layer(3, 3))
 # hidden layer of three neurons
 # output layer of three neurons
 
-y_pred = net.forward_propagation(np.array([[0.5, 0.5, 0.5]]))
+y_pred = net.forward_propagation(np.array([[0.25, 0.1, 0.5]]))
+
+print('y_pred', y_pred)
 
 # this test case would represent classifying into three different classes
 y_true = np.array([[0, 0, 1]])
@@ -22,6 +26,10 @@ y_true = np.array([[0, 0, 1]])
 # the gradient of the error with respect to the output
 # describes which way the output should move to yield a better approximation
 output_error_gradient = loss_functions.mse_gradient(y_true, y_pred)
+
+print('mse_gradient')
+
+print(output_error_gradient)
 
 data_after_back_propagation = net.backward_propagation(output_error_gradient)
 

@@ -25,8 +25,8 @@ class Network:
         order since the data is flowing from the last layer to the first layer."""
         for layer in reversed(self.layers):
             output_error = layer.backward_propagation(output_error, learning_rate)
-            print('output error in network back prop')
-            print(output_error)
+        #print('output error in network back prop')
+        #print(output_error)
         return output_error
         
     def predict(self, input_array):
@@ -52,14 +52,20 @@ class Network:
                 sample += 1
                 x = j[0]
                 y_true = j[1]
-                print('input vector in network train')
-                print(x)
+                #print('input vector in network train')
+                #print(x)
                 y_pred = self.forward_propagation(x)
+                #print('predicted output')
+                #print(y_pred)
 
                 output_error = mse_gradient(y_true, y_pred)
+
+                #print('output error gradient of the last layer')
+                #print(output_error)
+
                 # calculate the error value to see if it gets smaller
                 error = mean_squared_error(y_true, y_pred)
                 epoch_error += error
-                print('error in sample ', sample, ':', error)
+                #print('error in sample ', sample, ':', error)
                 self.backward_propagation(output_error, learning_rate)
             print('average epoch error', epoch_error / n_samples)

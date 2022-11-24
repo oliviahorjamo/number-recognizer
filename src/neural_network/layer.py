@@ -56,9 +56,6 @@ class Layer:
         self.output = x_plus_biases
         x_final = self.activation(x_plus_biases)
 
-        print('output')
-        print(x_final)
-
         return x_final
 
     def backward_propagation(self, error_gradient_output, learning_rate):
@@ -77,9 +74,6 @@ class Layer:
         
         # returns the output of this layer to what it was before the activation
         error_gradient_activation = self.activation_prime(self.output) * error_gradient_output
-        print('error gradient activation')
-
-        print(error_gradient_activation)
 
         error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_activation)
 
@@ -87,15 +81,6 @@ class Layer:
         self.backward_propagation_adjust_weights(error_gradient_weights, learning_rate)
 
         self.backward_propagation_adjust_biases(error_gradient_activation, learning_rate)
-
-        print('error gradient inputs')
-        print(error_gradient_inputs)
-
-        print('weigths')
-        print(self.weights)
-
-        print('biases')
-        print(self.biases)
 
         return error_gradient_inputs
 

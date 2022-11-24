@@ -36,6 +36,7 @@ class TestNetwork(unittest.TestCase):
         self.assertEqual((output == np.array([5.75, 5.75, 5.75])).all(), True)
 
     def test_back_propagation_two_layers_calculate_input_error_gradient(self):
+        learning_rate = 0.1
         layers = [StubLayer(3, 3), StubLayer(3,3)]
         for layer in layers:
             self.network.add_layer(layer)
@@ -43,7 +44,7 @@ class TestNetwork(unittest.TestCase):
         output = self.network.forward_propagation(input_vector)
         correct_output = np.array([0, 0, 1])
         output_error = mse_gradient(output, correct_output)
-        first_layer_input_error_gradient = self.network.backward_propagation(output_error)
+        first_layer_input_error_gradient = self.network.backward_propagation(output_error, learning_rate)
         self.assertEqual((
                         first_layer_input_error_gradient == 
                         np.array([[6.99375, 6.99375, 6.99375]]))

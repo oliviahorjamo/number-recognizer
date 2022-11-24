@@ -16,19 +16,18 @@ train_data = [
             (np.array([[1,1]]), np.array([[0]]))
             ]
 
-test_data = (np.array([[1,0]]))
-
 net = Network()
 
 input_size = np.size(train_data[0][0])
 
 net.add_layer(Layer(input_size, 2))
-net.add_layer(Layer(2, 2))
+#net.add_layer(Layer(2, 2))
 net.add_layer(Layer(2, 1))
 
+net.train(train_data, 1000, learning_rate = 0.1)
 
-net.train(train_data, 100, learning_rate = 0.1)
-
+test_data = (np.array([[1,0]]))
 y_pred = net.predict(test_data)
+print('test data:', test_data)
 
 print('y_pred', y_pred)

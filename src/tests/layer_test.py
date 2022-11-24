@@ -112,31 +112,36 @@ class TestLayer(unittest.TestCase):
         self.assertEqual((error_gradient_weights == correct_output).all(), True)
 
     def test_backward_prop_adjust_weights(self):
+        learning_rate = 0.1
         error_gradient_weights = np.array([[0.5, 0.5, 0.5],
                                     [0.5, 0.5, 0.5],
                                     [0.5, 0.5, 0.5]])
-        self.layer.backward_propagation_adjust_weights(error_gradient_weights)
-        new_weights = np.zeros((3,3))
+        self.layer.backward_propagation_adjust_weights(error_gradient_weights, learning_rate)
+        new_weights = np.array([[0.45, 0.45, 0.45],
+                                [0.45, 0.45, 0.45],
+                                [0.45, 0.45, 0.45]])
         self.assertEqual((self.layer.weights == new_weights).all(), True)
 
     def test_backward_prop_adjust_biases(self):
+        learning_rate = 0.1
         error_gradient_output = np.array([[0.5, 0.5, 0.5]])
-        self.layer.backward_propagation_adjust_biases(error_gradient_output)
-        new_biases = np.array([[0, 0, 0]])
+        self.layer.backward_propagation_adjust_biases(error_gradient_output, learning_rate)
+        new_biases = np.array([[0.45, 0.45, 0.45]])
         self.assertEqual((self.layer.biases == new_biases).all(), True)
 
     def test_backward_propagation(self):
+        learning_rate = 0.1
         input_array = np.array([[1, 1, 1]])
         #self.layer.input = np.array([[1, 1, 1]])
         y_pred = self.layer.forward_propagation(input_array)
         y_true = np.array([[0, 0, 1]])
         error_gradient_output = mse_gradient(y_true, y_pred)
-        backward_prop_output = self.layer.backward_propagation(error_gradient_output)
-        correct_weights = np.array([[4.5, 4.5, 2.5],
-                                    [4.5, 4.5, 2.5],
-                                    [4.5, 4.5, 2.5]])
+        backward_prop_output = self.layer.backward_propagation(error_gradient_output, learning_rate)
+        correct_weights = np.array([[0.9, 0.9, 0.7],
+                                    [0.9, 0.9, 0.7],
+                                    [0.9, 0.9, 0.7]])
         self.assertEqual((self.layer.weights == correct_weights).all(), True)
-        correct_biases = np.array([[4.5, 4.5, 2.5]])
+        correct_biases = np.array([[0.9, 0.9, 0.7]])
         self.assertEqual((self.layer.biases == correct_biases).all(), True)
         correct_output = np.array([[-5, -5, -5]])
         self.assertEqual((correct_output == backward_prop_output).all(), True)

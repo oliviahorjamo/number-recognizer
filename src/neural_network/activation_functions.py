@@ -17,3 +17,9 @@ def relu_prime(input_data):
     because the activation function maps these values to 0."""
     prime = np.where(input_data > 0, 1, 0)
     return prime
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_prime(x):
+    return np.exp(-x) / ((1+np.exp(-x))**2)

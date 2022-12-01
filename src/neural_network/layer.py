@@ -11,7 +11,7 @@ class Layer:
         the biases of the neurons of the layer
     """
 
-    def __init__(self, input_size, layer_size):
+    def __init__(self, input_size, output_size):
         """creates a new Layer -class instance with random weigths and biases
         Parameters:
         input_size: the size of the input given to this layer
@@ -23,8 +23,8 @@ class Layer:
         the size of self.biases is (1, layer_size).
         """
 
-        self.weights = np.random.rand(input_size, layer_size) - 0.5
-        self.biases = np.random.rand(1, layer_size) - 0.5
+        self.weights = np.random.randn(input_size, output_size)
+        self.biases = np.random.randn(1, output_size)
         self.input = None
         self.output = None
 
@@ -35,10 +35,10 @@ class Layer:
         return input_data + self.biases
    
     def activation(self, input_array):
-        return activation_functions.relu(input_array)
+        return activation_functions.sigmoid(input_array)
 
     def activation_prime(self, input_array):
-        return activation_functions.relu_prime(input_array)
+        return activation_functions.sigmoid_prime(input_array)
 
     def forward_propagation(self, input_array):
         """Propagate data forwards: calculate the output of this layer by calculating the
@@ -53,8 +53,8 @@ class Layer:
         self.input = input_array
         x_dot_weigths = self.dot_product(input_array)
         x_plus_biases = self.add_biases(x_dot_weigths)
-        self.output = x_plus_biases
         x_final = self.activation(x_plus_biases)
+        self.output = x_final
 
         return x_final
 
@@ -73,11 +73,18 @@ class Layer:
         """
         
         # returns the output of this layer to what it was before the activation
-        error_gradient_activation = self.activation_prime(self.output) * error_gradient_output
+        #print('error gradient output',error_gradient_output)
+        error_gradient_activation =  self.activation_prime(self.output) * error_gradient_output
+        #print('error gradient activation', error_gradient_activation)
 
         error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_activation)
 
+        #print('error gradient input', error_gradient_inputs)
+
         error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_activation)
+
+        #print('error_gradient_weights', error_gradient_weights)
+
         self.backward_propagation_adjust_weights(error_gradient_weights, learning_rate)
 
         self.backward_propagation_adjust_biases(error_gradient_activation, learning_rate)

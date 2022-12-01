@@ -33,7 +33,8 @@ class Network:
         """predict the class of the input array"""
         return self.forward_propagation(input_array)
 
-    def train(self, training_samples, epochs, learning_rate):
+    def train(self, x_train, y_train, epochs, learning_rate):
+
         """train the network with the training data
         
         Parameters:
@@ -42,30 +43,26 @@ class Network:
                 through the network
         learning_rate: an integer that telss how much to adjust the weigths in each update"""
         
-        n_samples = len(training_samples)
+        n_samples = len(x_train)
 
         # loop through the training data as many times as the epochs -parameter tells
         for i in range(epochs):
             epoch_error = 0
-            sample = 0
-            for j in training_samples:
-                sample += 1
-                x = j[0]
-                y_true = j[1]
-                #print('input vector in network train')
-                #print(x)
+            for j in range(n_samples):
+                # forward propagation
+                x = x_train[j]
+                y_true = y_train[j]
                 y_pred = self.forward_propagation(x)
-                #print('predicted output')
-                #print(y_pred)
 
-                output_error = mse_gradient(y_true, y_pred)
+                # compute loss (for display purpose only)
+                epoch_error += mean_squared_error(y_train[j], y_pred)
 
-                #print('output error gradient of the last layer')
-                #print(output_error)
+                # backward propagation
+                #error = mse_gradient(y_train[j], output)
+                error = - (y_true - y_pred)
 
-                # calculate the error value to see if it gets smaller
-                error = mean_squared_error(y_true, y_pred)
-                epoch_error += error
-                #print('error in sample ', sample, ':', error)
-                self.backward_propagation(output_error, learning_rate)
-            print('average epoch error', epoch_error / n_samples)
+                self.backward_propagation(error, learning_rate)
+
+            # calculate average error on all samples
+            epoch_error /= n_samples
+            print('epoch %d/%d   error=%f' % (i+1, epochs, epoch_error))

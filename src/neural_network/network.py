@@ -1,6 +1,7 @@
 #from neural_network.layer import Layer
 
-from neural_network.loss_functions import mse_gradient, mean_squared_error
+from neural_network.loss_functions import mean_squared_error
+import numpy as np
 
 class Network:
     """a class to represent the entire network
@@ -25,13 +26,22 @@ class Network:
         order since the data is flowing from the last layer to the first layer."""
         for layer in reversed(self.layers):
             output_error = layer.backward_propagation(output_error, learning_rate)
-        #print('output error in network back prop')
-        #print(output_error)
         return output_error
+
+    def predict_multiple(self, test_array):
+        """predict the class of multiple input arrays and
+            return a list of the predicted values"""
+        predictions = []
+        for array in test_array:
+            class_label = self.predict(array)
+            predictions.append(class_label)
+        return predictions
         
     def predict(self, input_array):
         """predict the class of the input array"""
-        return self.forward_propagation(input_array)
+        predicted_array = self.forward_propagation(input_array)
+        max_class = np.argmax(predicted_array)
+        return max_class + 1
 
     def train(self, x_train, y_train, epochs, learning_rate):
 
@@ -57,8 +67,6 @@ class Network:
                 # compute loss (for display purpose only)
                 epoch_error += mean_squared_error(y_train[j], y_pred)
 
-                # backward propagation
-                #error = mse_gradient(y_train[j], output)
                 error = - (y_true - y_pred)
 
                 self.backward_propagation(error, learning_rate)

@@ -1,7 +1,6 @@
 import unittest
 from neural_network.layer import Layer
 import numpy as np
-from neural_network.loss_functions import mse_gradient
 
 class StubLayer(Layer):
     def __init__(self, input_size, layer_size):
@@ -15,7 +14,6 @@ class TestLayer(unittest.TestCase):
         self.input_size = 3
         self.layer_size = 3
         self.layer = StubLayer(self.input_size,self.layer_size)
-        self.layer.input = None
 
     def test_init_layer_weights_size(self):
         self.assertEqual(self.layer.weights.size, self.input_size*self.layer_size)
@@ -40,53 +38,66 @@ class TestLayer(unittest.TestCase):
     def test_activation_all_positives(self):
         input_array = np.array([1,0.5,1])
         output = self.layer.activation(input_array)
-        self.assertEqual((output == np.array([1,0.5,1])).all(), True)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
 
     def test_activation_all_negatives(self):
         input_array = np.array([-0.5,-0.5,-0.5])
         output = self.layer.activation(input_array)
-        self.assertEqual((output == np.array([0,0,0])).all(), True)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
 
     def test_activation_positives_and_negatives(self):
         input_array = np.array([-0.5, 0.5, -0.5])
         output = self.layer.activation(input_array)
-        self.assertEqual((output == np.array([0, 0.5, 0])).all(), True)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
 
     def test_forward_propagation_all_positives(self):
         input_array = np.array([0.5,0.5,0.5])
         output = self.layer.forward_propagation(input_array)
-        self.assertEqual((output == np.array([5/4,5/4,5/4])).all(), True)
+        self.assertNotEqual((output == input_array).all(), True)
+        self.assertIsNotNone(self.layer.output)
 
     def test_forward_propagation_all_negatives(self):
         input_array = np.array([-0.5,-0.5,-0.5])
         output = self.layer.forward_propagation(input_array)
-        self.assertEqual((output == np.array([0,0,0])).all(), True)
+        self.assertNotEqual((output == input_array).all(), True)
+        self.assertIsNotNone(self.layer.output)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
+
 
     def test_forward_propagation_pos_and_neg(self):
         input_array = np.array([-0.5,0.5,-0.5])
         output = self.layer.forward_propagation(input_array)
-        self.assertEqual((output == np.array([0.25,0.25,0.25])).all(), True)
+        self.assertNotEqual((output == input_array).all(), True)
+        self.assertIsNotNone(self.layer.output)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
 
     def test_activation_prime_all_positives(self):
         input_array = np.array([1,0.5,1])
         output = self.layer.activation_prime(input_array)
-        self.assertEqual((output == np.array([1,1,1])).all(), True)
+        self.assertEqual((output < input_array).all(), True)
 
     def test_activation_prime_all_negatives(self):
         input_array = np.array([-0.5,-0.5,-0.5])
         output = self.layer.activation_prime(input_array)
-        self.assertEqual((output == np.array([0,0,0])).all(), True)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
 
     def test_activation_prime_positives_and_negatives(self):
         input_array = np.array([-0.5, 0.5, -0.5])
         output = self.layer.activation_prime(input_array)
-        self.assertEqual((output == np.array([0, 1, 0])).all(), True)
+        self.assertEqual((output < np.array([1,1,1])).all(), True)
+        self.assertEqual((output > np.array([0,0,0])).all(), True)
 
     def test_backward_prop_calculate_error_gradient_weights_wrong_output(self):
         self.layer.input = np.array([[1, 1, 1]])
-        error_gradient_output = np.array([[0.5, 0.5, 0.5]])
-        error_gradient_weights = self.layer.calculate_error_gradient_weights(error_gradient_output)
-        correct_output = np.array([[0.5, 0.5, 0.5],
+        output_error = np.array([[-0.5, -0.5, -0.5]])
+        error_gradient_weights = self.layer.calculate_error_gradient_weights(output_error)
+        correct_output = - np.array([[0.5, 0.5, 0.5],
                                     [0.5, 0.5, 0.5],
                                     [0.5, 0.5, 0.5]])
         self.assertEqual((error_gradient_weights == correct_output).all(), True)
@@ -132,19 +143,15 @@ class TestLayer(unittest.TestCase):
     def test_backward_propagation(self):
         learning_rate = 0.1
         input_array = np.array([[1, 1, 1]])
-        #self.layer.input = np.array([[1, 1, 1]])
         y_pred = self.layer.forward_propagation(input_array)
         y_true = np.array([[0, 0, 1]])
-        error_gradient_output = mse_gradient(y_true, y_pred)
+        error_gradient_output = - (y_true - y_pred)
+        weights_first = self.layer.weights
+        biases_first = self.layer.biases
         backward_prop_output = self.layer.backward_propagation(error_gradient_output, learning_rate)
-        correct_weights = np.array([[0.9, 0.9, 0.7],
-                                    [0.9, 0.9, 0.7],
-                                    [0.9, 0.9, 0.7]])
-        self.assertEqual((self.layer.weights == correct_weights).all(), True)
-        correct_biases = np.array([[0.9, 0.9, 0.7]])
-        self.assertEqual((self.layer.biases == correct_biases).all(), True)
-        correct_output = np.array([[-5, -5, -5]])
-        self.assertEqual((correct_output == backward_prop_output).all(), True)
+        self.assertEqual((self.layer.weights == weights_first).all(), False)
+        self.assertEqual((self.layer.biases == biases_first).all(), False)
+        self.assertEqual((backward_prop_output == np.zeros((3,1))).all(), False)
 
 
 

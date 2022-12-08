@@ -43,6 +43,12 @@ def add_layers(net, layer_sizes = [[28*28, 100], [100, 50], [50, 10]]):
 
 def create_network(layer_sizes = [[28*28, 100], [100, 50], [50, 10]]):
     net = Network()
+
+    # always set the size of the input layer to the number of pixels
+    # and the size of the output layer to number of categories
+    layer_sizes[0][0] = 784
+    layer_sizes[len(layer_sizes) - 1][1] = 10
+
     net = add_layers(net, layer_sizes)
     return net
     

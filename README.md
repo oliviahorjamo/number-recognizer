@@ -11,6 +11,7 @@ Recognize hand-written numbers with a neural network made from scratch. Data stu
 - [Week 3](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/week3_report.md)
 - [Week 4](https://github.com/oliviahorjamo/number-recognizer/tree/main/documentation/week4_report.md)
 - [Week 5](https://github.com/oliviahorjamo/number-recognizer/tree/main/documentation/week5_report.md)
+- [Week 6](https://github.com/oliviahorjamo/number-recognizer/tree/main/documentation/week6_report.md)
 
 ## Documentation
 

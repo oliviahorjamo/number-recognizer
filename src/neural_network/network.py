@@ -43,6 +43,42 @@ class Network:
         max_class = np.argmax(predicted_array)
         return max_class + 1
 
+    def train_epoch(self, x_train, y_train, learning_rate):
+        """Loop through all samples and call the training function for each
+        sample.
+        
+        Parameters:
+        x_train: x values for the n training samples
+        (n can be set at index_mnist.py train -function)
+        y_train: the true values for the training samples
+        learning rate: a float value that tells how radically the weights and biases
+        should be changed
+        """
+        n_samples = len(x_train)
+        epoch_error = 0
+        for i in range(n_samples):
+            
+            epoch_error += self.train_sample(x_train[i], y_true=y_train[i], learning_rate = learning_rate)
+
+        return epoch_error / n_samples
+
+    def train_sample(self, x, y_true, learning_rate):
+        """flow data through one sample and adjust weights and biases
+        
+        Parameters:
+        x: the training sample
+        y_true: the true value for this sample
+        learning_rate: a float value that tells how radically the weights
+        and biases should be changed
+        """
+        y_pred = self.forward_propagation(x)
+        error_value = mean_squared_error(y_true, y_pred)
+        error = - (y_true - y_pred)
+        self.backward_propagation(error, learning_rate)
+        return error_value
+
+        
+
     def train(self, x_train, y_train, epochs, learning_rate):
 
         """train the network with the training data
@@ -53,24 +89,8 @@ class Network:
                 through the network
         learning_rate: an integer that telss how much to adjust the weigths in each update"""
         
-        n_samples = len(x_train)
-
-        # loop through the training data as many times as the epochs -parameter tells
+        # loop through the number of epochs
         for i in range(epochs):
-            epoch_error = 0
-            for j in range(n_samples):
-                # forward propagation
-                x = x_train[j]
-                y_true = y_train[j]
-                y_pred = self.forward_propagation(x)
-
-                # compute loss (for display purpose only)
-                epoch_error += mean_squared_error(y_train[j], y_pred)
-
-                error = - (y_true - y_pred)
-
-                self.backward_propagation(error, learning_rate)
-
-            # calculate average error on all samples
-            epoch_error /= n_samples
+            # call the function that trains each epoch
+            epoch_error = self.train_epoch(x_train, y_train, learning_rate)
             print('epoch %d/%d   error=%f' % (i+1, epochs, epoch_error))

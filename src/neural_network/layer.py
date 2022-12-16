@@ -33,7 +33,7 @@ class Layer:
 
     def add_biases(self, input_data):
         return input_data + self.biases
-   
+
     def activation(self, input_array):
         return activation_functions.sigmoid(input_array)
 
@@ -63,41 +63,39 @@ class Layer:
         with respect to the weights and biases of this layer and then output the error with
         respect to the input of this layer. This will yield the output_error for the previous
         layer.
-        
+
         Parameters:
         error_gradient_output: the gradient of the error with respect to this layer's output
 
         Outputs:
         error_gradient_inputs: the derivative of the error with respect to the input of this layer
-        
+
         """
-        
-        # returns the output of this layer to what it was before the activation
-        #print('error gradient output',error_gradient_output)
-        error_gradient_activation =  self.activation_prime(self.output) * error_gradient_output
-        #print('error gradient activation', error_gradient_activation)
 
-        error_gradient_inputs = self.calculate_error_gradient_input(error_gradient_activation)
+        error_gradient_activation = self.activation_prime(
+            self.output) * error_gradient_output
+        error_gradient_inputs = self.calculate_error_gradient_input(
+            error_gradient_activation)
 
-        #print('error gradient input', error_gradient_inputs)
+        error_gradient_weights = self.calculate_error_gradient_weights(
+            error_gradient_activation)
 
-        error_gradient_weights = self.calculate_error_gradient_weights(error_gradient_activation)
+        self.backward_propagation_adjust_weights(
+            error_gradient_weights, learning_rate)
 
-        #print('error_gradient_weights', error_gradient_weights)
-
-        self.backward_propagation_adjust_weights(error_gradient_weights, learning_rate)
-
-        self.backward_propagation_adjust_biases(error_gradient_activation, learning_rate)
+        self.backward_propagation_adjust_biases(
+            error_gradient_activation, learning_rate)
 
         return error_gradient_inputs
 
     def calculate_error_gradient_weights(self, error_gradient_output):
         """Calculate the gradient of the error with respect to the weight parameters of this layer.
-        
+
         Return:
         error_gradient_weights: dE/dw = dE/dy * dy/dw. Because y = xw + b, dy/dw = x.
         Hence, dE/dw = dE/dy * x
-        The gradient should be of size (input_size, layer_size) since there is one gradient for every weight.
+        The gradient should be of size (input_size, layer_size) since there is one gradient for
+        every weight.
         """
         error_gradient_weights = np.dot(self.input.T, error_gradient_output)
         return error_gradient_weights
@@ -105,7 +103,7 @@ class Layer:
     def calculate_error_gradient_input(self, error_gradient_output):
         """Calculate the gradient of the error with respect to the inputs of this layer, i.e. the
         outputs of the previous layer.
-        
+
         Return:
         error_gradient_inputs: dE / dx = dE/dy * dy/dx. Because y = xw + b, dy / dx = w."""
         return np.dot(error_gradient_output, self.weights.T)
@@ -128,7 +126,7 @@ class Layer:
         error_gradient_output: the gradient of the error with respect to the output of this layer.
         The gradient of th error with respect to the biases is the same as the error with respect
         to the biases because dE/db = dE/dy * dy/db and y = xw + b which means that dy/db = 0.
-        
+
         The negative of the gradient tells the direction of deepest decrease, i.e. which biases
         to adjust and by how much to decrease the error the fastest."""
         self.biases = self.biases - learning_rate * error_gradient_output

@@ -4,6 +4,7 @@ import numpy as np
 from neural_network.network import Network
 from keras.utils import np_utils
 
+
 class TestIndex(unittest.TestCase):
     def setUp(self):
         return True
@@ -32,7 +33,7 @@ class TestIndex(unittest.TestCase):
 
     def test_epoch_errors_decrease_and_and_become_sufficiently_small(self):
         (x_train, y_train), (x_test, y_test) = index_mnist.load_and_reshape()
-        x_train, x_test = index_mnist.normalize_x(x_train, x_test)        
+        x_train, x_test = index_mnist.normalize_x(x_train, x_test)
         y_train = np_utils.to_categorical(y_train)
         y_test = np_utils.to_categorical(y_test)
         net = index_mnist.create_network()
@@ -46,6 +47,6 @@ class TestIndex(unittest.TestCase):
             epoch_error = net.train_epoch(x_train, y_train, learning_rate)
             epoch_errors.append(epoch_error)
         # sort the errors in a descending order and test that the result doesn't change
-        epoch_errors_sorted = sorted(epoch_errors, reverse = True)
+        epoch_errors_sorted = sorted(epoch_errors, reverse=True)
         self.assertEqual(epoch_errors_sorted, epoch_errors)
         self.assertLess(epoch_error, 0.05)

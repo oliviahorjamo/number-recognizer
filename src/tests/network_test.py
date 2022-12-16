@@ -7,9 +7,11 @@ import mock
 from mock import patch
 from unittest.mock import MagicMock
 
+
 class StubNetwork():
     def __init__(self):
         self.layers = []
+
 
 class TestNetwork(unittest.TestCase):
 
@@ -26,7 +28,7 @@ class TestNetwork(unittest.TestCase):
         pass
 
     def test_backward_propagation_three_layers(self):
-        layers = [StubLayer(3, 3), StubLayer(3,3), StubLayer(3,3)]
+        layers = [StubLayer(3, 3), StubLayer(3, 3), StubLayer(3, 3)]
         weights = [layer.weights for layer in layers]
         biases = [layer.biases for layer in layers]
         for layer in layers:
@@ -44,19 +46,20 @@ class TestNetwork(unittest.TestCase):
 
     def test_back_propagation_two_layers_calculate_input_error_gradient(self):
         learning_rate = 0.1
-        layers = [StubLayer(3, 3), StubLayer(3,3)]
+        layers = [StubLayer(3, 3), StubLayer(3, 3)]
         for layer in layers:
             self.network.add_layer(layer)
         input_vector = np.array([[0.25, 0.1, 0.5]])
         output = self.network.forward_propagation(input_vector)
         correct_output = np.array([0, 0, 1])
         output_error = - (correct_output - output)
-        first_layer_input_error_gradient = self.network.backward_propagation(output_error, learning_rate)
+        first_layer_input_error_gradient = self.network.backward_propagation(
+            output_error, learning_rate)
         self.assertNotEqual((
-                        first_layer_input_error_gradient == 
-                        np.zeros((3,1)))
-                        .all(), 
-                        True)
+            first_layer_input_error_gradient ==
+            np.zeros((3, 1)))
+            .all(),
+            True)
 
     def test_backward_propagation_two_layers(self):
         layers = [StubLayer(3, 3), StubLayer(3, 3)]

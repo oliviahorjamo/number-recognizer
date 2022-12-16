@@ -1,5 +1,6 @@
 import numpy as np
-    
+
+
 def relu(input_data):
     return (np.maximum(0, input_data))
 
@@ -10,6 +11,7 @@ def relu_item_function(item):
         return 1
     return 0
 
+
 def relu_prime(input_data):
     """Return the derivate of the activation function for this input data.
     Because the activation function returns the value itself if it is larger than 0,
@@ -18,8 +20,10 @@ def relu_prime(input_data):
     prime = np.where(input_data > 0, 1, 0)
     return prime
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
 
-def sigmoid_prime(x):
-    return np.exp(-x) / ((1+np.exp(-x))**2)
+def sigmoid(x_values):
+    return 1 / (1 + np.exp(-x_values))
+
+
+def sigmoid_prime(x_values):
+    return np.exp(-x_values) / ((1+np.exp(-x_values))**2)

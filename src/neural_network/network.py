@@ -91,5 +91,5 @@ class Network:
         for i in range(epochs):
             # call the function that trains each epoch
             epoch_error = self.train_epoch(x_train, y_train, learning_rate)
-            print(f'epoch {i+1:%d}/{epochs:%d}   error={epoch_error:%f}')
+            print(f'epoch {i+1}/{epochs}   error={epoch_error}')
         return epoch_error

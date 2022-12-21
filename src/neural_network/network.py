@@ -41,7 +41,7 @@ class Network:
         """predict the class of the input array"""
         predicted_array = self.forward_propagation(input_array)
         max_class = np.argmax(predicted_array)
-        return max_class + 1
+        return max_class
 
     def train_epoch(self, x_train, y_train, learning_rate):
         """Loop through all samples and call the training function for each

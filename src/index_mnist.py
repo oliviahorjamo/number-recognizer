@@ -4,27 +4,33 @@ from keras.datasets import mnist
 from keras.utils import np_utils
 from neural_network.network import Network
 from neural_network.layer import Layer
+import matplotlib.pyplot as plt
 
 
 def correct_values(y_true):
-    return [np.argmax(array) + 1 for array in y_true]
+    return [np.argmax(array) for array in y_true]
 
 
 def number_of_wrong_answers(y_pred, y_true):
     wrongs = 0
+    wrong_indices = []
     for i, value in enumerate(y_pred):
         if value != y_true[i]:
+            wrong_indices.append(i)
             wrongs += 1
-    return wrongs
+    return wrongs, wrong_indices
 
 
 def normalize_x(x_train, x_test):
     return x_train / 255, x_test/255
 
+def load_data():
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    return (x_train, y_train), (x_test, y_test)
 
 def load_and_reshape():
     # load MNIST data from keras datasets
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = load_data()
     # reshape input data
     x_train = x_train.reshape(x_train.shape[0], 1, 28*28)
     x_train = x_train.astype('float32')
@@ -57,14 +63,23 @@ def create_network(layer_sizes=[[28*28, 100], [100, 50], [50, 10]]):
     return net
 
 
-def print_result(pred, true):
-    n_wrong = number_of_wrong_answers(pred, true)
-    string = (f'predicted values: \n'
-              f' {pred} \n'
-              f'true values: \n'
-              f'{true} \n'
-              f'number of wrong answers: \n'
-              f'{n_wrong}')
+def print_result(pred, true, n_wrong, n_test):
+    if n_wrong < 20:
+        string = (f'predicted values: \n'
+                f' {pred} \n'
+                f'true values: \n'
+                f'{true} \n'
+                f'number of wrong answers: \n'
+                f'{n_wrong}')
+    else:
+        string = (f'the first 20 predicted values: \n'
+                f' {pred[:20]} \n'
+                f'the first 20 true values: \n'
+                f'{true[:20]} \n'
+                f'total number of wrong answers: \n'
+                f'{n_wrong} \n'
+                f'ratio of wrong answers: \n'
+                f'{n_wrong/n_test}')
     print(string)
 
 def load_and_create_train_and_test_data():
@@ -75,6 +90,63 @@ def load_and_create_train_and_test_data():
     y_test = np_utils.to_categorical(y_test)
     return x_train, y_train, x_test, y_test
 
+def run(net):
+
+    n_test = int(input('How many numbers would you like to predict (int)?: '))
+
+    test_indices = random.sample(range(len(test_x)), n_test)
+
+    # test on the random sample of the test data
+    pred_classes = net.predict_multiple(test_x[test_indices])
+    true_classes = correct_values(test_y[test_indices])
+
+    n_wrong, wrong_indices = number_of_wrong_answers(pred_classes, true_classes)
+
+    print_result(pred_classes, true_classes, n_wrong, n_test)
+
+    if n_wrong != 0:
+
+        choice = None
+
+        try:
+            choice = int(input('select 1 if you want to draw a sample of the wrongly categorized numbers: '))
+        except:
+            pass
+
+        if choice == 1:
+
+            if len(wrong_indices) > 10:
+                wrong_indices = wrong_indices[:10]
+                print('Drawing only the first 10 wrongly categorized numbers')
+
+            wrongly_categorized = [test_indices[i] for i in wrong_indices]
+            
+            (_, _), (imgs_test_x, y_test) = load_data()
+
+            if len(wrongly_categorized) > 5:
+                num_col = 5
+                num_row = len(wrongly_categorized) // num_col
+            else:
+                num_col = len(wrongly_categorized)
+                num_row = 1
+
+            fig, axes = plt.subplots(num_row, num_col,
+                                    figsize=(1.5*num_col,2*num_row))
+
+            for index, value in enumerate(wrong_indices):
+                test_index = test_indices[value]
+                if num_row != 1:
+                    ax = axes[index//num_col, index%num_col]
+                elif num_col != 1:
+                    ax = axes[index%num_col]
+                else:
+                    ax = axes
+                ax.imshow(imgs_test_x[test_index], cmap='gray')
+                ax.set_title(f'''Correct class: {y_test[test_index]}\n Predicted class: {pred_classes[value]}''', y = 1.5)
+
+            plt.tight_layout()
+            plt.show()
+
 
 
 
@@ -83,13 +155,6 @@ if __name__ == '__main__':
     train_x, train_y, test_x, test_y = load_and_create_train_and_test_data()
 
     network = create_network()
-    network, last_error = train_network(network, train_x, train_y, epochs=2)
+    network, last_error = train_network(network, train_x, train_y, epochs=15, n_train = 2000)
 
-    n_test = 50
-    test_indices = random.sample(range(len(test_x)), n_test)
-
-    # test on the random sample of the test data
-    pred_classes = network.predict_multiple(test_x[test_indices])
-    true_classes = correct_values(test_y[test_indices])
-
-    print_result(pred_classes, true_classes)
+    run(network)

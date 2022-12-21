@@ -1,6 +1,6 @@
 # Testing document
 
-The program is currently tested only with unit tests. In addition, manual testing has been done at all phases of the project.
+The program is tested with unittests. In addition, the effect of the number of layers, epochs and input size is tested by running the program with different parameters. These tests can be run by running time_complexity_tests.py
 
 ## Unit testing
 
@@ -14,7 +14,25 @@ The program is currently tested only with unit tests. In addition, manual testin
   - the weights and biases of each layer change in backward propagation
 
 ### TestActivation class
-- Tests the activation functions
+- Tests that the output of the activation functions is in the correct range and is of correct shape.
 
 ### TestIndex class
 - Tests the index_mnist.py() module.
+  - Tests that the loaded train and test data is of correct shape and type.
+  - Tests that normalizing the train and test data yields values that are within the correct range.
+  - Tests that creating a network truly creates the correct type of network.
+  - Tests that the error value decreases at each epoch and that finally, the epoch error is smaller than 5%.
+
+## Testing the effect of different parameters
+
+### Effect of the number of layers on the running time and the error
+
+![alt_text](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/data/layer_size_graph.png)
+
+### Effect of the number of epochs on the running time and the error
+
+![alt text](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/data/epoch_number_graph.png)
+
+### Time complexity tests
+
+![alt_text](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/data/sample_size_graph.png)

@@ -42,7 +42,7 @@ Another thing to notice here is that adding too many layers leads to overfitting
 
 When it comes to running time, adding more layers increases it as one would guess, because the same calculations are performed at each layer. However, adding layers does not yield a linear increase in running time as would be expected because each layer is similar to the previous one (100x100) and hence, should yield 10 000 new calculations. However, what we notice here is that the running time increases more when adding the 8th and 9th layer but then decreases when adding thr 10th layer. I haven't figured out a reasonable explanation for this behavior either.
 
-![alt_text]([https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/data/layer_size_graph.png](https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/data/layer_size_graph.png))
+![alt_text]([https://github.com/oliviahorjamo/number-recognizer/blob/main/documentation/data/layer_size_graph.png)
 
 ### Effect of the number of epochs on the running time and the error
 

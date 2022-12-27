@@ -12,6 +12,7 @@ def correct_values(y_true):
 
 
 def wrong_indices(y_pred, y_true):
+    """Return the indices of the wrongly categorized numbers."""
     wrong_indices = []
     for i, value in enumerate(y_pred):
         if value != y_true[i]:
@@ -49,6 +50,15 @@ def add_layers(net, layer_sizes=[[28*28, 100], [100, 50], [50, 10]]):
 
 
 def create_network(layer_sizes=[[28*28, 100], [100, 50], [50, 10]]):
+    """Create a network with the given layer sizes.
+    
+    Parameters:
+    layer_sizes: a list of lists of length 2 where each list contains
+    the sizes of the layer at this index
+    
+    Returns:
+    net: an object of the Network class with the given layers
+    """
     net = Network()
 
     # always set the size of the input layer to the number of pixels
@@ -81,6 +91,15 @@ def print_result(pred, true, n_wrong, n_test):
 
 
 def create_train_and_test_data():
+    """Load train and test data from the MNIST database. Reshape data and one-hot
+    encode.
+    
+    Returns:
+    x_train: a vector that contains the pixels of each training sample
+    y_train: a vector that contains the one-hot encoded classes of each training sample
+    x_test: a vector that contains the pixels of each testing sample
+    y_test: a vector that contains the one-hot encoded classes of each test sample
+    """
     (x_train, y_train), (x_test, y_test) = load_data()
     (x_train, y_train), (x_test, y_test) = reshape(x_train, y_train, x_test, y_test)
     x_train, x_test = normalize_x(x_train, x_test)

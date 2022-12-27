@@ -1,11 +1,7 @@
 import unittest
-from neural_network.layer import Layer
 from neural_network.network import Network
 import numpy as np
 from tests.layer_test import StubLayer
-import mock
-from mock import patch
-from unittest.mock import MagicMock
 
 
 class StubNetwork():
@@ -22,10 +18,6 @@ class TestNetwork(unittest.TestCase):
         layer = StubLayer(3, 3)
         self.network.add_layer(layer)
         self.assertEqual(len(self.network.layers), 1)
-
-    def test_forward_propagation_two_layers(self):
-        # tässä pitäis mockin avulla onnistua testaamaan että layerin oikeita funktioita kutsutaan
-        pass
 
     def test_backward_propagation_three_layers(self):
         layers = [StubLayer(3, 3), StubLayer(3, 3), StubLayer(3, 3)]
@@ -77,3 +69,4 @@ class TestNetwork(unittest.TestCase):
             self.assertNotEqual((weights[i] == layer.weights).all(), True)
             self.assertNotEqual((biases[i] == layer.biases).all(), True)
         self.assertEqual((output == test_data).all(), False)
+        

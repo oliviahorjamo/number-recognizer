@@ -1,4 +1,8 @@
 [run]
 source = src
 
-omit = src/tests/**
+omit = src/tests/**, src/time_complexity_tests.py
+
+[report]
+exclude_lines =
+    def run

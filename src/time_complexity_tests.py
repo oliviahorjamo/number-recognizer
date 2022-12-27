@@ -54,10 +54,11 @@ class TimeComplexityTests():
                 print('layer, shape: ', layer.weights.shape)
 
     def predict_and_return_n_wrong(self, net):
-        pred = net.predict_multiple(self.x_test[:100])
-        correct = index.correct_values(self.y_test[:100])
-        n_wrong = index.number_of_wrong_answers(pred, correct)
-        return n_wrong / 100
+        n_test = 1000
+        pred = net.predict_multiple(self.x_test[:n_test])
+        correct = index.correct_values(self.y_test[:n_test])
+        n_wrong = len(index.wrong_indices(pred, correct))
+        return n_wrong / n_test
 
     def test_effect_of_layers(self):
         """ Test the effect of adding more layers both to the error and to the
@@ -100,9 +101,10 @@ class TimeComplexityTests():
         """Test the effect of increasing and decreasing sample size both to
         the error and the time of training and prediction."""
         # train a similar network with different sample sizes
-        sample_sizes = [100, 500, 1000, 1500, 2000, 2500,
-                        3000, 3500, 4000, 4500, 5000,
-                        5500, 6000]
+        sample_sizes = [100,500,1000,2000,3000,4000,5000,6000,
+                        7000, 8000, 9000, 10000, 12000,
+                        14000, 16000, 18000, 20000,
+                        25000,30000,40000,50000,60000]
         result = []
         for size in sample_sizes:
             net = self.create_basic_net()
@@ -140,6 +142,6 @@ if __name__ == '__main__':
     tests.create_csv_folder()
     x_train, y_train, x_test, y_test = index.load_and_create_train_and_test_data()
     tests.set_test_datasets(x_train, y_train, x_test, y_test)
-    #tests.test_effect_of_layers()
+    tests.test_effect_of_layers()
     tests.test_effect_of_epochs()
-    #tests.test_effect_of_sample_size()
+    tests.test_effect_of_sample_size()

@@ -11,14 +11,12 @@ def correct_values(y_true):
     return [np.argmax(array) for array in y_true]
 
 
-def number_of_wrong_answers(y_pred, y_true):
-    wrongs = 0
+def wrong_indices(y_pred, y_true):
     wrong_indices = []
     for i, value in enumerate(y_pred):
         if value != y_true[i]:
             wrong_indices.append(i)
-            wrongs += 1
-    return wrongs, wrong_indices
+    return wrong_indices
 
 
 def normalize_x(x_train, x_test):
@@ -28,10 +26,7 @@ def load_data():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     return (x_train, y_train), (x_test, y_test)
 
-def load_and_reshape():
-    # load MNIST data from keras datasets
-    (x_train, y_train), (x_test, y_test) = load_data()
-    # reshape input data
+def reshape(x_train, y_train, x_test, y_test):
     x_train = x_train.reshape(x_train.shape[0], 1, 28*28)
     x_train = x_train.astype('float32')
     x_test = x_test.reshape(x_test.shape[0], 1, 28*28)
@@ -40,9 +35,9 @@ def load_and_reshape():
 
 
 def train_network(net, x_train, y_train, n_train=1000, epochs=15, learning_rate=0.1):
-    last_epoch_error = net.train(
+    last_error = net.train(
         x_train[0:n_train], y_train[0:n_train], epochs=epochs, learning_rate=learning_rate)
-    return net, last_epoch_error
+    return net, last_error
 
 
 def add_layers(net, layer_sizes=[[28*28, 100], [100, 50], [50, 10]]):
@@ -82,8 +77,9 @@ def print_result(pred, true, n_wrong, n_test):
                 f'{n_wrong/n_test}')
     print(string)
 
-def load_and_create_train_and_test_data():
-    (x_train, y_train), (x_test, y_test) = load_and_reshape()
+def create_train_and_test_data():
+    (x_train, y_train), (x_test, y_test) = load_data()
+    (x_train, y_train), (x_test, y_test) = reshape(x_train, y_train, x_test, y_test)
     x_train, x_test = normalize_x(x_train, x_test)
     # one hot encode the output data (from one number to a list of 0s and 1s)
     y_train = np_utils.to_categorical(y_train)
@@ -100,7 +96,8 @@ def run(net):
     pred_classes = net.predict_multiple(test_x[test_indices])
     true_classes = correct_values(test_y[test_indices])
 
-    n_wrong, wrong_indices = number_of_wrong_answers(pred_classes, true_classes)
+    wrong_indices_list = wrong_indices(pred_classes, true_classes)
+    n_wrong = len(wrong_indices_list)
 
     print_result(pred_classes, true_classes, n_wrong, n_test)
 
@@ -115,11 +112,11 @@ def run(net):
 
         if choice == 1:
 
-            if len(wrong_indices) > 10:
-                wrong_indices = wrong_indices[:10]
+            if len(wrong_indices_list) > 10:
+                wrong_indices_list = wrong_indices_list[:10]
                 print('Drawing only the first 10 wrongly categorized numbers')
 
-            wrongly_categorized = [test_indices[i] for i in wrong_indices]
+            wrongly_categorized = [test_indices[i] for i in wrong_indices_list]
             
             (_, _), (imgs_test_x, y_test) = load_data()
 
@@ -133,7 +130,7 @@ def run(net):
             fig, axes = plt.subplots(num_row, num_col,
                                     figsize=(1.5*num_col,2*num_row))
 
-            for index, value in enumerate(wrong_indices):
+            for index, value in enumerate(wrong_indices_list):
                 test_index = test_indices[value]
                 if num_row != 1:
                     ax = axes[index//num_col, index%num_col]
@@ -152,7 +149,7 @@ def run(net):
 
 if __name__ == '__main__':
 
-    train_x, train_y, test_x, test_y = load_and_create_train_and_test_data()
+    train_x, train_y, test_x, test_y = create_train_and_test_data()
 
     network = create_network()
     network, last_error = train_network(network, train_x, train_y, epochs=15, n_train = 2000)

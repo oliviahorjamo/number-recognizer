@@ -140,8 +140,8 @@ class TimeComplexityTests():
 if __name__ == '__main__':
     tests = TimeComplexityTests()
     tests.create_csv_folder()
-    x_train, y_train, x_test, y_test = index.load_and_create_train_and_test_data()
+    x_train, y_train, x_test, y_test = index.create_train_and_test_data()
     tests.set_test_datasets(x_train, y_train, x_test, y_test)
     tests.test_effect_of_layers()
     tests.test_effect_of_epochs()
-    tests.test_effect_of_sample_size()
+    #tests.test_effect_of_sample_size()

@@ -69,4 +69,3 @@ class TestNetwork(unittest.TestCase):
             self.assertNotEqual((weights[i] == layer.weights).all(), True)
             self.assertNotEqual((biases[i] == layer.biases).all(), True)
         self.assertEqual((output == test_data).all(), False)
-        

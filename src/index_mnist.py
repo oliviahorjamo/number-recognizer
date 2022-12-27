@@ -22,9 +22,11 @@ def wrong_indices(y_pred, y_true):
 def normalize_x(x_train, x_test):
     return x_train / 255, x_test/255
 
+
 def load_data():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     return (x_train, y_train), (x_test, y_test)
+
 
 def reshape(x_train, y_train, x_test, y_test):
     x_train = x_train.reshape(x_train.shape[0], 1, 28*28)
@@ -61,21 +63,22 @@ def create_network(layer_sizes=[[28*28, 100], [100, 50], [50, 10]]):
 def print_result(pred, true, n_wrong, n_test):
     if n_wrong < 20:
         string = (f'predicted values: \n'
-                f' {pred} \n'
-                f'true values: \n'
-                f'{true} \n'
-                f'number of wrong answers: \n'
-                f'{n_wrong}')
+                  f' {pred} \n'
+                  f'true values: \n'
+                  f'{true} \n'
+                  f'number of wrong answers: \n'
+                  f'{n_wrong}')
     else:
         string = (f'the first 20 predicted values: \n'
-                f' {pred[:20]} \n'
-                f'the first 20 true values: \n'
-                f'{true[:20]} \n'
-                f'total number of wrong answers: \n'
-                f'{n_wrong} \n'
-                f'ratio of wrong answers: \n'
-                f'{n_wrong/n_test}')
+                  f' {pred[:20]} \n'
+                  f'the first 20 true values: \n'
+                  f'{true[:20]} \n'
+                  f'total number of wrong answers: \n'
+                  f'{n_wrong} \n'
+                  f'ratio of wrong answers: \n'
+                  f'{n_wrong/n_test}')
     print(string)
+
 
 def create_train_and_test_data():
     (x_train, y_train), (x_test, y_test) = load_data()
@@ -85,6 +88,7 @@ def create_train_and_test_data():
     y_train = np_utils.to_categorical(y_train)
     y_test = np_utils.to_categorical(y_test)
     return x_train, y_train, x_test, y_test
+
 
 def run(net):
 
@@ -106,7 +110,8 @@ def run(net):
         choice = None
 
         try:
-            choice = int(input('select 1 if you want to draw a sample of the wrongly categorized numbers: '))
+            choice = int(
+                input('select 1 if you want to draw a sample of the wrongly categorized numbers: '))
         except:
             pass
 
@@ -117,7 +122,7 @@ def run(net):
                 print('Drawing only the first 10 wrongly categorized numbers')
 
             wrongly_categorized = [test_indices[i] for i in wrong_indices_list]
-            
+
             (_, _), (imgs_test_x, y_test) = load_data()
 
             if len(wrongly_categorized) > 5:
@@ -128,23 +133,22 @@ def run(net):
                 num_row = 1
 
             fig, axes = plt.subplots(num_row, num_col,
-                                    figsize=(1.5*num_col,2*num_row))
+                                     figsize=(1.5*num_col, 2*num_row))
 
             for index, value in enumerate(wrong_indices_list):
                 test_index = test_indices[value]
                 if num_row != 1:
-                    ax = axes[index//num_col, index%num_col]
+                    ax = axes[index//num_col, index % num_col]
                 elif num_col != 1:
-                    ax = axes[index%num_col]
+                    ax = axes[index % num_col]
                 else:
                     ax = axes
                 ax.imshow(imgs_test_x[test_index], cmap='gray')
-                ax.set_title(f'''Correct class: {y_test[test_index]}\n Predicted class: {pred_classes[value]}''', y = 1.5)
+                ax.set_title(
+                    f'''Correct class: {y_test[test_index]}\n Predicted class: {pred_classes[value]}''', y=1.5)
 
             plt.tight_layout()
             plt.show()
-
-
 
 
 if __name__ == '__main__':
@@ -152,6 +156,6 @@ if __name__ == '__main__':
     train_x, train_y, test_x, test_y = create_train_and_test_data()
 
     network = create_network()
-    network, last_error = train_network(network, train_x, train_y, epochs=15, n_train = 2000)
+    network, last_error = train_network(network, train_x, train_y, epochs=15, n_train=2000)
 
     run(network)

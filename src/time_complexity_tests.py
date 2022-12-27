@@ -15,6 +15,7 @@ EPOCH_FILE = 'epoch_test_results.csv'
 SAMPLE_SIZE_FILE = 'sample_size_test_results.csv'
 TIME_COMPLEXITY_FILE = 'time_complexity_test_results.csv'
 
+
 class TimeComplexityTests():
     """A class for testing the time complexity of the program.
     """
@@ -101,10 +102,10 @@ class TimeComplexityTests():
         """Test the effect of increasing and decreasing sample size both to
         the error and the time of training and prediction."""
         # train a similar network with different sample sizes
-        sample_sizes = [100,500,1000,2000,3000,4000,5000,6000,
+        sample_sizes = [100, 500, 1000, 2000, 3000, 4000, 5000, 6000,
                         7000, 8000, 9000, 10000, 12000,
                         14000, 16000, 18000, 20000,
-                        25000,30000,40000,50000,60000]
+                        25000, 30000, 40000, 50000, 60000]
         result = []
         for size in sample_sizes:
             net = self.create_basic_net()
@@ -137,6 +138,7 @@ class TimeComplexityTests():
         self.x_test = x_te
         self.y_test = y_te
 
+
 if __name__ == '__main__':
     tests = TimeComplexityTests()
     tests.create_csv_folder()
@@ -144,4 +146,4 @@ if __name__ == '__main__':
     tests.set_test_datasets(x_train, y_train, x_test, y_test)
     tests.test_effect_of_layers()
     tests.test_effect_of_epochs()
-    #tests.test_effect_of_sample_size()
+    # tests.test_effect_of_sample_size()

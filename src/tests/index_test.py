@@ -12,9 +12,9 @@ class TestIndex(unittest.TestCase):
     def test_load_and_reshape_data(self):
         (x_train, y_train), (x_test, y_test) = index_mnist.load_data()
         (x_train, y_train), (x_test, y_test) = index_mnist.reshape(x_train,
-                                                                    y_train,
-                                                                    x_test,
-                                                                    y_test)
+                                                                   y_train,
+                                                                   x_test,
+                                                                   y_test)
         self.assertEqual(len(x_train), 60000)
         self.assertEqual(len(x_test), 10000)
         self.assertEqual(len(y_train), 60000)
@@ -54,7 +54,7 @@ class TestIndex(unittest.TestCase):
         self.assertLess(epoch_error, 0.05)
 
     def test_predictions_become_sufficiently_good(self):
-        x_train, y_train,x_test,y_test = index_mnist.create_train_and_test_data()
+        x_train, y_train, x_test, y_test = index_mnist.create_train_and_test_data()
         net = index_mnist.create_network()
         n_train = 1000
         n_test = 100
@@ -67,14 +67,11 @@ class TestIndex(unittest.TestCase):
         corr = index_mnist.correct_values(y_test[:n_test])
         wrong = index_mnist.wrong_indices(pred, corr)
         self.assertLess(len(wrong) / n_test, 0.25)
-        
 
     def test_correct_values(self):
-        correct = [1,2,3,4,5,6,7]
-        pred = [1,2,0,4,5,6,7]
+        correct = [1, 2, 3, 4, 5, 6, 7]
+        pred = [1, 2, 0, 4, 5, 6, 7]
         wrong_indices_list = index_mnist.wrong_indices(pred, correct)
         self.assertEqual(len(wrong_indices_list), 1)
         self.assertEqual(wrong_indices_list, [2])
-        self.assertEqual(pred[wrong_indices_list[0]], 0)        
-
-    
+        self.assertEqual(pred[wrong_indices_list[0]], 0)

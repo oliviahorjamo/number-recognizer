@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def sigmoid(x_values):
     return 1 / (1 + np.exp(-x_values))
 
